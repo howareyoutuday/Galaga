@@ -36,6 +36,8 @@ while True:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and game.run:
+                game.spaceship_group.sprite.shoot()
             if event.type == SHOOT_LASER and game.run:
                 game.alien_shoot_laser()
             if event.type == MYSTERYSHIP and game.run:

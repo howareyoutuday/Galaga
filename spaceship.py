@@ -25,7 +25,9 @@ class Spaceship(pygame.sprite.Sprite):
         if keys[pygame.K_LEFT]:
             self.rect.x -= self.speed
 
-        if keys[pygame.K_SPACE] and self.laser_ready:
+    # shoot lasers separately (1click = 1laser)
+    def shoot(self):
+        if self.laser_ready:
             self.laser_ready = False
             laser = Laser(self.rect.center, 5, self.screen_height)
             self.lasers_group.add(laser)

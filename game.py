@@ -15,6 +15,8 @@ class Game:
         self.spaceship_group.add(Spaceship(self.screen_width, self.screen_height, self.offset))
         self.obstacles = self.create_obstacles()
         self.aliens_group = pygame.sprite.Group()
+        self.level = 1
+        self.waiting_for_next_level = False
         self.create_aliens()
         self.aliens_direction = 1
         self.alien_lasers_group = pygame.sprite.Group()
@@ -39,18 +41,20 @@ class Game:
         return obstacles
 
     def create_aliens(self):
-        for row in range(5):
+        if self.level == 1:
+            rows = [3, 4]
+            alien_type = 1
+        elif self.level == 2:
+            rows = [2, 3]
+            alien_type = 2
+        else:
+            rows = [0]
+            alien_type = 3
+
+        for row in rows:
             for column in range(11):
                 x = 75 + column * 55
                 y = 110 + row * 55
-
-                if row == 0:
-                    alien_type = 3
-                elif row in (1,2):
-                    alien_type = 2
-                else:
-                    alien_type = 1
-
 
                 alien = Alien(alien_type, x + self.offset/2, y)
                 self.aliens_group.add(alien)
@@ -133,6 +137,7 @@ class Game:
     def reset(self):
         self.run = True
         self.lives = 3
+        self.level = 1
         self.spaceship_group.sprite.reset()
         self.aliens_group.empty()
         self.alien_lasers_group.empty()

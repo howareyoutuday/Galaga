@@ -11,7 +11,7 @@ Grey = (29, 29, 27)
 Yellow = (243, 216, 63)
 
 font = pygame.font.Font("Font/monogram.ttf", 40)
-level_surface = font.render("LEVEL 01", False, Yellow)
+minecraft_font = pygame.font.Font("Font/Minecraft.ttf", 30)
 game_over_surface = font.render("GAME OVER", False, Yellow)
 score_text_surface = font.render("SCORE", False, Yellow)
 highscore_text_surface = font.render("HIGH  SCORE", False, Yellow)
@@ -23,6 +23,9 @@ clock = pygame.time.Clock()
 
 game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
 
+next_level_rect = pygame.Rect(290, 378, 220, 45)  # button for next level
+play_again_rect = pygame.Rect(290, 378, 220, 45)  # button for play again
+
 SHOOT_LASER = pygame.USEREVENT
 pygame.time.set_timer(SHOOT_LASER, 300)
 
@@ -33,14 +36,24 @@ while True:
     try:
         #Checking for events
         for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN and game.waiting_for_next_level:  # making button for next level clickable
+                if next_level_rect.collidepoint(event.pos):
+                    game.start_next_level()
+
+            if event.type == pygame.MOUSEBUTTONDOWN and game.waiting_for_play_again:  # making button for play again clickable
+                if play_again_rect.collidepoint(event.pos):
+                    game.reset()
+
+
+
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and game.run:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and game.run and not game.waiting_for_next_level:
                 game.spaceship_group.sprite.shoot()
-            if event.type == SHOOT_LASER and game.run:
+            if event.type == SHOOT_LASER and game.run and not game.waiting_for_next_level:
                 game.alien_shoot_laser()
-            if event.type == MYSTERYSHIP and game.run:
+            if event.type == MYSTERYSHIP and game.run and not game.waiting_for_next_level and not game.waiting_for_play_again:
                 game.create_mystery_ship()
                 pygame.time.set_timer(MYSTERYSHIP, random.randint(4000, 8000))
 
@@ -48,8 +61,9 @@ while True:
             if keys[pygame.K_SPACE] and game.run == False:
                 game.reset()
 
+
         #Updating
-        if game.run:
+        if game.run and not game.waiting_for_next_level:
             game.spaceship_group.update()
             game.move_aliens()
             game.alien_lasers_group.update()
@@ -64,8 +78,26 @@ while True:
         pygame.draw.rect(screen, Yellow, (10, 10, 780, 780), 2, 0, 60, 60, 60, 60)
         pygame.draw.line(screen, Yellow, (25, 730), (775, 730), 3)
 
-        if game.run:
+        if game.waiting_for_next_level:
+            if game.level == 1:
+                next_level_surface = font.render("LEVEL 2", False, Yellow)
+            elif game.level == 2:
+                next_level_surface = font.render("BOSS!!!", False, Yellow)
+
+            pygame.draw.rect(screen, Yellow, next_level_rect, 2)
+            screen.blit(next_level_surface, next_level_surface.get_rect(center=next_level_rect.center))
+
+
+        elif game.waiting_for_play_again:
+            play_again_surface = minecraft_font.render("PLAY AGAIN ?", False, Yellow)
+            pygame.draw.rect(screen, Yellow, play_again_rect, 2)
+            screen.blit(play_again_surface, play_again_surface.get_rect(center=play_again_rect.center))
+
+
+        elif game.run:
+            level_surface = font.render(f"LEVEL {str(game.level).zfill(2)}", False, Yellow)
             screen.blit(level_surface, (570, 740, 50, 50))
+
         else:
             screen.blit(game_over_surface, (570, 740, 50, 50))
 

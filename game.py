@@ -17,6 +17,8 @@ class Game:
         self.aliens_group = pygame.sprite.Group()
         self.level = 1
         self.waiting_for_next_level = False
+        self.waiting_for_play_again = False
+        self.winning_music = False
         self.create_aliens()
         self.aliens_direction = 1
         self.alien_lasers_group = pygame.sprite.Group()
@@ -27,8 +29,9 @@ class Game:
         self.highscore = 0
         self.explosion_sound = pygame.mixer.Sound("Sounds/explosion.ogg")
         self.load_highscore()
-        pygame.mixer.music.load("Sounds/music.ogg")
-        pygame.mixer.music.play(-1)
+        self.winning_sound = pygame.mixer.Sound("Sounds/brawl_start_winning_song.ogg")
+        self.bg_music = pygame.mixer.Sound("Sounds/music.ogg")
+        self.play_bg_music()
 
     def create_obstacles(self):
         obstacle_width = len(grid[0]) * 3
@@ -41,15 +44,26 @@ class Game:
         return obstacles
 
     def create_aliens(self):
+        # if self.level == 1:
+        #     rows = [3, 4]
+        #     alien_type = 1
+        # elif self.level == 2:
+        #     rows = [1, 2, 3, 4]
+        #     alien_type = 2
+        # else:
+        #     rows = [0, 1, 2, 3, 4]
+        #     alien_type = 3
+
         if self.level == 1:
-            rows = [3, 4]
+            rows = [1]
             alien_type = 1
         elif self.level == 2:
-            rows = [2, 3]
+            rows = [1]
             alien_type = 2
         else:
-            rows = [0]
+            rows = [1]
             alien_type = 3
+
 
         for row in rows:
             for column in range(11):
@@ -84,7 +98,10 @@ class Game:
             self.alien_lasers_group.add(laser_sprite)
 
     def create_mystery_ship(self):
-        self.mystery_ship_group.add(MysteryShip(self.screen_width, self.offset))
+        if self.level == 3:
+            self.mystery_ship_group.add(MysteryShip(self.screen_width, self.offset))
+        else:
+            pass
 
     def check_for_collisions(self):
         #Spaceship
@@ -110,6 +127,22 @@ class Game:
                     if pygame.sprite.spritecollide(laser_sprite, obstacle.blocks_group, True):
                         laser_sprite.kill()
 
+        if len(self.aliens_group) == 0 and self.level < 3 and not self.waiting_for_next_level:  # next level logic
+            self.waiting_for_next_level = True
+            self.alien_lasers_group.empty()
+            self.mystery_ship_group.empty()
+            self.spaceship_group.sprite.lasers_group.empty()
+
+        if len(self.aliens_group) == 0 and self.level == 3 and self.winning_music == False:
+            self.waiting_for_play_again = True
+            self.winning_music = True
+            self.alien_lasers_group.empty()
+            self.mystery_ship_group.empty()
+            self.spaceship_group.sprite.lasers_group.empty()
+            self.bg_music.stop()
+            self.winning_sound.play(-1)
+
+
         #Alien Lasers
         if self.alien_lasers_group:
             for laser_sprite in self.alien_lasers_group:
@@ -134,10 +167,30 @@ class Game:
     def game_over(self):
         self.run = False
 
+    def play_bg_music(self):
+        if self.run and not self.waiting_for_play_again:
+            self.bg_music.stop()
+            self.bg_music.play(-1)
+
+
+    def start_next_level(self):
+        if self.level < 3:
+            self.level += 1
+            self.waiting_for_next_level = False
+            self.aliens_group.empty()
+            self.alien_lasers_group.empty()
+            self.mystery_ship_group.empty()
+            self.spaceship_group.sprite.lasers_group.empty()
+            self.aliens_direction = 1
+            self.create_aliens()
+            self.obstacles = self.create_obstacles()
+            self.spaceship_group.sprite.reset()
+
     def reset(self):
         self.run = True
         self.lives = 3
         self.level = 1
+        self.waiting_for_next_level = False
         self.spaceship_group.sprite.reset()
         self.aliens_group.empty()
         self.alien_lasers_group.empty()
@@ -145,6 +198,10 @@ class Game:
         self.mystery_ship_group.empty()
         self.obstacles = self.create_obstacles()
         self.score = 0
+        self.waiting_for_play_again = False
+        self.winning_sound.stop()
+        self.play_bg_music()
+        self.winning_music = False
 
     def check_for_highscore(self):
         if self.score > self.highscore:

@@ -5,9 +5,10 @@ from obstacle import grid
 from alien import Alien
 from laser import Laser
 from alien import MysteryShip
+import av
 
 class Game:
-    def __init__(self, screen_width, screen_height, offset):
+    def __init__(self, screen_width, screen_height, offset, screen):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.offset = offset
@@ -32,6 +33,7 @@ class Game:
         self.winning_sound = pygame.mixer.Sound("Sounds/brawl_start_winning_song.ogg")
         self.bg_music = pygame.mixer.Sound("Sounds/music.ogg")
         self.play_bg_music()
+        self.screen = screen
 
     def create_obstacles(self):
         obstacle_width = len(grid[0]) * 3
@@ -141,6 +143,7 @@ class Game:
             self.spaceship_group.sprite.lasers_group.empty()
             self.bg_music.stop()
             self.winning_sound.play(-1)
+            self.play_winning_video()
 
 
         #Alien Lasers
@@ -216,3 +219,24 @@ class Game:
                 self.highscore = int(file.read())
         except FileNotFoundError:
             self.highscore = 0
+
+    def play_winning_video(self):
+        video = av.open("Sounds/winning_video.mp4")
+
+        clock = pygame.time.Clock()
+
+        for frame in video.decode(video=0):
+
+            image = frame.to_ndarray(format="rgb24")
+            surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
+
+            self.screen.blit(surface, (0, 0))
+            pygame.display.flip()
+            clock.tick(60)
+
+
+
+
+
+
+

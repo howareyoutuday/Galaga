@@ -70,24 +70,11 @@ while True:
             game.alien_lasers_group.update()
             game.mystery_ship_group.update()
             game.check_for_collisions()
+            # game.play_winning_video
 
 
         #Drawing
         screen.fill(Grey)
-
-        if game.play_winning_video:
-            play_winning_video = True
-            video = av.open("Sounds/winning_video.mp4")
-            clock = pygame.time.Clock()
-
-            for frame in video.decode(video=0):
-
-                image = frame.to_ndarray(format="rgb24")
-                surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
-                self.screen.blit(surface, (0, 0))
-                pygame.display.flip()
-                clock.tick(60)
-
 
         #UI
         pygame.draw.rect(screen, Yellow, (10, 10, 780, 780), 2, 0, 60, 60, 60, 60)

@@ -5,6 +5,7 @@ from obstacle import grid
 from alien import Alien
 from laser import Laser
 from alien import MysteryShip
+import av
 
 class Game:
     def __init__(self, screen_width, screen_height, offset, screen):
@@ -226,19 +227,14 @@ class Game:
         except FileNotFoundError:
             self.highscore = 0
 
-    # def display_winning_video(self):
-    #     video = av.open("Sounds/winning_video.mp4")
-    #
-    #     clock = pygame.time.Clock()
-    #
-    #     for frame in video.decode(video=0):
-    #
-    #         image = frame.to_ndarray(format="rgb24")
-    #         surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
-    #
-    #         self.screen.blit(surface, (0, 0))
-    #         pygame.display.flip()
-    #         clock.tick(60)
+    def display_winning_video(self):
+        video = av.open("Sounds/winning_video.mp4")
+
+        image = frame.to_ndarray(format="rgb24")
+        surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
+        self.screen.blit(surface, (0, 0))
+        pygame.display.flip()
+        clock.tick(60)
 
 
 

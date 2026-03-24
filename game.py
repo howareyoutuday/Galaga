@@ -5,7 +5,6 @@ from obstacle import grid
 from alien import Alien
 from laser import Laser
 from alien import MysteryShip
-import av
 
 class Game:
     def __init__(self, screen_width, screen_height, offset, screen):
@@ -34,6 +33,7 @@ class Game:
         self.bg_music = pygame.mixer.Sound("Sounds/music.ogg")
         self.play_bg_music()
         self.screen = screen
+        self.play_winning_video = False
 
     def create_obstacles(self):
         obstacle_width = len(grid[0]) * 3
@@ -129,21 +129,27 @@ class Game:
                     if pygame.sprite.spritecollide(laser_sprite, obstacle.blocks_group, True):
                         laser_sprite.kill()
 
+        # Next level mode
         if len(self.aliens_group) == 0 and self.level < 3 and not self.waiting_for_next_level:  # next level logic
             self.waiting_for_next_level = True
             self.alien_lasers_group.empty()
             self.mystery_ship_group.empty()
             self.spaceship_group.sprite.lasers_group.empty()
 
+
+        # Play again mode
         if len(self.aliens_group) == 0 and self.level == 3 and self.winning_music == False:
             self.waiting_for_play_again = True
             self.winning_music = True
+
             self.alien_lasers_group.empty()
             self.mystery_ship_group.empty()
             self.spaceship_group.sprite.lasers_group.empty()
             self.bg_music.stop()
             self.winning_sound.play(-1)
-            self.play_winning_video()
+
+        if len(self.aliens_group) == 0 and self.level == 3 and self.play_winning_video == False:
+            self.play_winning_video = True
 
 
         #Alien Lasers
@@ -220,19 +226,19 @@ class Game:
         except FileNotFoundError:
             self.highscore = 0
 
-    def play_winning_video(self):
-        video = av.open("Sounds/winning_video.mp4")
-
-        clock = pygame.time.Clock()
-
-        for frame in video.decode(video=0):
-
-            image = frame.to_ndarray(format="rgb24")
-            surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
-
-            self.screen.blit(surface, (0, 0))
-            pygame.display.flip()
-            clock.tick(60)
+    # def display_winning_video(self):
+    #     video = av.open("Sounds/winning_video.mp4")
+    #
+    #     clock = pygame.time.Clock()
+    #
+    #     for frame in video.decode(video=0):
+    #
+    #         image = frame.to_ndarray(format="rgb24")
+    #         surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
+    #
+    #         self.screen.blit(surface, (0, 0))
+    #         pygame.display.flip()
+    #         clock.tick(60)
 
 
 

@@ -127,7 +127,7 @@ while True:
 
 
         pygame.display.update()
-        clock.tick(200)
+        clock.tick(60)
 
     except KeyboardInterrupt:
         print("Stop Succes")

@@ -227,17 +227,17 @@ class Game:
         except FileNotFoundError:
             self.highscore = 0
 
-    def download_winning_video(self):
-        video = av.open("Sounds/winning_video.mp4")
-        self.play_winning_video = False
-        print("video opened")
-
-        for frame in video.decode(video=0):
-            image = frame.to_ndarray(format="rgb24")
-            surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
-            self.screen.blit(surface, (0, 0))
-            pygame.display.flip()
-            print("video code")
+    # def download_winning_video(self):
+    #     video = av.open("Sounds/winning_video.mp4")
+    #     self.play_winning_video = False
+    #     print("video opened")
+    #
+    #     for frame in video.decode(video=0):
+    #         image = frame.to_ndarray(format="rgb24")
+    #         surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
+    #         self.screen.blit(surface, (0, 0))
+    #         pygame.display.flip()
+    #         print("video code")
 
 
 

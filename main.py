@@ -106,15 +106,33 @@ while True:
             if game.play_winning_video:
                 video = av.open("Sounds/winning_video.mp4")
                 game.play_winning_video = False
+                stop_video = False
+
                 print("video opened")
 
                 for frame in video.decode(video=0):
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            stop_video = True
+                            pygame.quit()
+                            sys.exit()
+
+                        if event.type == pygame.MOUSEBUTTONDOWN and game.waiting_for_play_again:
+                            if play_again_rect.collidepoint(event.pos):
+                                game.reset()
+                                stop_video = True
+
+                    if stop_video:
+                        break
+
                     image = frame.to_ndarray(format="rgb24")
                     surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
                     screen.blit(surface, (0, 0))
                     pygame.display.flip()
                     clock.tick(60)
                     print("video code")
+
+
 
 
         elif game.run:

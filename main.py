@@ -45,7 +45,16 @@ while True:
                 if play_again_rect.collidepoint(event.pos):
                     game.reset()
 
-
+            # if game.play_winning_video:
+            #     video = av.open("Sounds/winning_video.mp4")
+            #     game.play_winning_video = True
+            #
+            #     for frame in video.decode(video=0):
+            #         image = frame.to_ndarray(format="rgb24")
+            #         surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
+            #         screen.blit(surface, (0, 0))
+            #         pygame.display.flip()
+            #         clock.tick(60)
 
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -94,6 +103,16 @@ while True:
             play_again_surface = minecraft_font.render("PLAY AGAIN ?", False, Yellow)
             pygame.draw.rect(screen, Yellow, play_again_rect, 2)
             screen.blit(play_again_surface, play_again_surface.get_rect(center=play_again_rect.center))
+            if game.play_winning_video:
+                video = av.open("Sounds/winning_video.mp4")
+                game.play_winning_video = True
+
+                for frame in video.decode(video=0):
+                    image = frame.to_ndarray(format="rgb24")
+                    surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
+                    screen.blit(surface, (0, 0))
+                    pygame.display.flip()
+                    clock.tick(60)
 
 
         elif game.run:
@@ -127,7 +146,7 @@ while True:
 
 
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(200)
 
     except KeyboardInterrupt:
         print("Stop Succes")

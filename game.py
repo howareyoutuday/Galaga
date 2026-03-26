@@ -46,26 +46,26 @@ class Game:
         return obstacles
 
     def create_aliens(self):
-        if self.level == 1:
-            rows = [3, 4]
-            alien_type = 1
-        elif self.level == 2:
-            rows = [1, 2, 3, 4]
-            alien_type = 2
-        else:
-            rows = [0, 1, 2, 3, 4]
-            alien_type = 3
-
         # if self.level == 1:
-        #     rows = [1]
+        #     rows = [3, 4]
         #     alien_type = 1
         # elif self.level == 2:
-        #     rows = [1]
+        #     rows = [1, 2, 3, 4]
         #     alien_type = 2
         # else:
-        #     rows = [1]
+        #     rows = [0, 1, 2, 3, 4]
         #     alien_type = 3
-        #
+
+        if self.level == 1:
+            rows = [1]
+            alien_type = 1
+        elif self.level == 2:
+            rows = [1]
+            alien_type = 2
+        else:
+            rows = [1]
+            alien_type = 3
+
 
         for row in rows:
             for column in range(11):
@@ -138,9 +138,10 @@ class Game:
 
 
         # Play again mode
-        if len(self.aliens_group) == 0 and self.level == 3 and self.winning_music == False:
+        if len(self.aliens_group) == 0 and self.level == 3 and self.winning_music == False and self.play_winning_video == False:
             self.waiting_for_play_again = True
             self.winning_music = True
+            self.play_winning_video = True
 
             self.alien_lasers_group.empty()
             self.mystery_ship_group.empty()
@@ -148,8 +149,6 @@ class Game:
             self.bg_music.stop()
             self.winning_sound.play(-1)
 
-        if len(self.aliens_group) == 0 and self.level == 3 and self.play_winning_video == False:
-            self.play_winning_video = True
 
 
         #Alien Lasers

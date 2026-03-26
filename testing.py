@@ -1,33 +1,40 @@
-import av
 import pygame
+import cv2
 
 pygame.init()
-
-video = av.open("Sounds/winning_video.mp4")
-stream = video.streams.video[0]
-
-width = stream.codec_context.width
-height = stream.codec_context.height
-
-screen = pygame.display.set_mode((width, height))
+screen = pygame.display.set_mode((240, 240))
 clock = pygame.time.Clock()
 
-running = True
+cap = cv2.VideoCapture("Sounds/winning_video.mp4")   # or absolute path
+fps = 60
 
-for frame in video.decode(video=0):
+running = True
+while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    if not running:
-        break
+    ok, frame = cap.read()
+    if not ok:
+        break  # video ended
 
-    image = frame.to_ndarray(format="rgb24")
-    surface = pygame.image.frombuffer(image.tobytes(), (width, height), "RGB")
+    # OpenCV gives BGR, pygame expects RGB
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-    screen.blit(surface, (0, 0))
+    h, w = frame.shape[:2]
+    surf = pygame.image.frombytes(frame.tobytes(), (w, h), "RGB")
+
+    # optional: fit video into your existing screen
+    surf = pygame.transform.scale(surf, screen.get_size())
+
+    # draw whatever background / game scene you want first
+    screen.fill((0, 0, 0))
+
+    # then draw video into the existing pygame screen
+    screen.blit(surf, (0, 0))
+
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(fps)
 
-video.close()
+cap.release()
 pygame.quit()

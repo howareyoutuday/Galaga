@@ -227,6 +227,7 @@ class Game:
         self.winning_music = False
         self.play_winning_video = False
         self.play_showdown_music = False
+        self.lose_music.stop()
 
 
     def check_for_highscore(self):

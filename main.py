@@ -22,7 +22,7 @@ pygame.display.set_caption("Galaga")
 
 clock = pygame.time.Clock()
 
-game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET)
+game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET, screen)
 
 next_level_rect = pygame.Rect(290, 378, 220, 45)  # button for next level
 play_again_rect = pygame.Rect(290, 378, 220, 45)  # button for play again

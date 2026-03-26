@@ -8,7 +8,7 @@ from alien import MysteryShip
 import av
 
 class Game:
-    def __init__(self, screen_width, screen_height, offset):
+    def __init__(self, screen_width, screen_height, offset, screen):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.offset = offset
@@ -34,6 +34,7 @@ class Game:
         self.bg_music = pygame.mixer.Sound("Sounds/music.ogg")
         self.play_bg_music()
         self.play_winning_video = False
+        self.screen = screen
 
     def create_obstacles(self):
         obstacle_width = len(grid[0]) * 3
@@ -226,15 +227,17 @@ class Game:
         except FileNotFoundError:
             self.highscore = 0
 
-    # def display_winning_video(self):
-    #     video = av.open("Sounds/winning_video.mp4")
-    #
-    #     image = frame.to_ndarray(format="rgb24")
-    #     surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
-    #     self.screen.blit(surface, (0, 0))
-    #     pygame.display.flip()
-    #     clock.tick(60)
+    def download_winning_video(self):
+        video = av.open("Sounds/winning_video.mp4")
+        self.play_winning_video = False
+        print("video opened")
 
+        for frame in video.decode(video=0):
+            image = frame.to_ndarray(format="rgb24")
+            surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
+            self.screen.blit(surface, (0, 0))
+            pygame.display.flip()
+            print("video code")
 
 
 

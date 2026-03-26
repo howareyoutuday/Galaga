@@ -1,3 +1,5 @@
+from math import floor
+
 import pygame, sys, random
 from game import Game
 import av
@@ -47,7 +49,7 @@ while True:
                     game.reset()
 
             # if game.play_winning_video:
-            #     video = av.open("Sounds/winning_video.mp4")
+            #     video = av.open("Media/winning_video.mp4")
             #     game.play_winning_video = True
             #
             #     for frame in video.decode(video=0):
@@ -109,15 +111,17 @@ while True:
             screen.blit(thanks, thanks.get_rect(center=thanks_rect.center))
 
             if game.play_winning_video:
-                video = av.open("Sounds/winning_video.mp4")
+                video = av.open("Media/winning_video.mp4")
                 game.play_winning_video = False
                 stop_video = False
 
-                print("video opened")
+                print("video started")
+                frame_counter = 0
 
                 while not stop_video:
                     video.seek(0)
                     for frame in video.decode(video=0):
+
                         for event in pygame.event.get():
                             if event.type == pygame.QUIT:
                                 stop_video = True
@@ -132,15 +136,18 @@ while True:
                         if stop_video:
                             break
 
+                        print("Replay:", floor(frame_counter/930), "|| Frame: >", frame_counter, "< ||  ( 1Video = 930 Frames )")  # video is decoded to frames, 1 full video = 930 frames
+                        frame_counter += 1
+
                         video_location = ((SCREEN_WIDTH+OFFSET)/2 - 190 , 75)
-                        print(video_location)
+
 
                         image = frame.to_ndarray(format="rgb24")
                         surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
                         surface = pygame.transform.scale(surface, (380, 380))
                         screen.blit(surface, (video_location))
                         pygame.display.flip()
-                        clock.tick(60)
+                        clock.tick(80)
 
 
 
@@ -176,7 +183,7 @@ while True:
 
 
         pygame.display.update()
-        clock.tick(80)
+        clock.tick(200)
 
     except KeyboardInterrupt:
         print("Stop Success")

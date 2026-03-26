@@ -5,7 +5,7 @@ pygame.init()
 screen = pygame.display.set_mode((240, 240))
 clock = pygame.time.Clock()
 
-cap = cv2.VideoCapture("Sounds/winning_video.mp4")   # or absolute path
+cap = cv2.VideoCapture("Media/winning_video.mp4")   # or absolute path
 fps = 60
 
 running = True

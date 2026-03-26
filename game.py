@@ -28,10 +28,10 @@ class Game:
         self.run = True
         self.score = 0
         self.highscore = 0
-        self.explosion_sound = pygame.mixer.Sound("Sounds/explosion.ogg")
+        self.explosion_sound = pygame.mixer.Sound("Media/explosion.ogg")
         self.load_highscore()
-        self.winning_sound = pygame.mixer.Sound("Sounds/brawl_start_winning_song.ogg")
-        self.bg_music = pygame.mixer.Sound("Sounds/music.ogg")
+        self.winning_sound = pygame.mixer.Sound("Media/brawl_start_winning_song.ogg")
+        self.bg_music = pygame.mixer.Sound("Media/music.ogg")
         self.play_bg_music()
         self.play_winning_video = False
         self.screen = screen
@@ -47,25 +47,25 @@ class Game:
         return obstacles
 
     def create_aliens(self):
-        if self.level == 1:
-            rows = [3, 4]
-            alien_type = 1
-        elif self.level == 2:
-            rows = [1, 2, 3, 4]
-            alien_type = 2
-        else:
-            rows = [0, 1, 2, 3, 4]
-            alien_type = 3
-
         # if self.level == 1:
-        #     rows = [1]
+        #     rows = [3, 4]
         #     alien_type = 1
         # elif self.level == 2:
-        #     rows = [1]
+        #     rows = [1, 2, 3, 4]
         #     alien_type = 2
         # else:
-        #     rows = [1]
+        #     rows = [0, 1, 2, 3, 4]
         #     alien_type = 3
+
+        if self.level == 1:
+            rows = [1]
+            alien_type = 1
+        elif self.level == 2:
+            rows = [1]
+            alien_type = 2
+        else:
+            rows = [1]
+            alien_type = 3
 
 
         for row in rows:
@@ -228,7 +228,7 @@ class Game:
             self.highscore = 0
 
     # def download_winning_video(self):
-    #     video = av.open("Sounds/winning_video.mp4")
+    #     video = av.open("Media/winning_video.mp4")
     #     self.play_winning_video = False
     #     print("video opened")
     #

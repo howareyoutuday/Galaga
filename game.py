@@ -5,7 +5,6 @@ from obstacle import grid
 from alien import Alien
 from laser import Laser
 from alien import MysteryShip
-import av
 
 class Game:
     def __init__(self, screen_width, screen_height, offset, screen):
@@ -35,6 +34,11 @@ class Game:
         self.play_bg_music()
         self.play_winning_video = False
         self.screen = screen
+        self.showdown_music = pygame.mixer.Sound("Media/showdown_music.ogg")
+        self.play_showdown_music = False
+        self.lose_music = pygame.mixer.Sound("Media/lose_music.ogg")
+        self.laugh_music = pygame.mixer.Sound("Media/laugh_music.ogg")
+
 
     def create_obstacles(self):
         obstacle_width = len(grid[0]) * 3
@@ -47,25 +51,25 @@ class Game:
         return obstacles
 
     def create_aliens(self):
-        # if self.level == 1:
-        #     rows = [3, 4]
-        #     alien_type = 1
-        # elif self.level == 2:
-        #     rows = [1, 2, 3, 4]
-        #     alien_type = 2
-        # else:
-        #     rows = [0, 1, 2, 3, 4]
-        #     alien_type = 3
-
         if self.level == 1:
-            rows = [1]
+            rows = [3, 4]
             alien_type = 1
         elif self.level == 2:
-            rows = [1]
+            rows = [1, 2, 3, 4]
             alien_type = 2
         else:
-            rows = [1]
+            rows = [0, 1, 2, 3, 4]
             alien_type = 3
+
+        # if self.level == 1:
+        #     rows = [1]
+        #     alien_type = 1
+        # elif self.level == 2:
+        #     rows = [1]
+        #     alien_type = 2
+        # else:
+        #     rows = [1]
+        #     alien_type = 3
 
 
         for row in rows:
@@ -143,6 +147,8 @@ class Game:
             self.waiting_for_play_again = True
             self.winning_music = True
             self.play_winning_video = True
+            self.laugh_music.play()
+            self.showdown_music.stop()
 
             self.alien_lasers_group.empty()
             self.mystery_ship_group.empty()
@@ -150,7 +156,10 @@ class Game:
             self.bg_music.stop()
             self.winning_sound.play(-1)
 
-
+        if self.level == 3 and not self.waiting_for_play_again and not self.waiting_for_next_level and self.play_showdown_music == False:
+            self.bg_music.stop()
+            self.showdown_music.play(-1)
+            self.play_showdown_music = True
 
         #Alien Lasers
         if self.alien_lasers_group:
@@ -175,6 +184,10 @@ class Game:
 
     def game_over(self):
         self.run = False
+        self.bg_music.stop()
+        self.showdown_music.stop()
+        self.play_lose_music = True
+        self.lose_music.play()
 
     def play_bg_music(self):
         if self.run and not self.waiting_for_play_again:
@@ -209,9 +222,12 @@ class Game:
         self.score = 0
         self.waiting_for_play_again = False
         self.winning_sound.stop()
+        self.showdown_music.stop()
         self.play_bg_music()
         self.winning_music = False
         self.play_winning_video = False
+        self.play_showdown_music = False
+
 
     def check_for_highscore(self):
         if self.score > self.highscore:

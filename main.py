@@ -16,7 +16,9 @@ Yellow = (243, 216, 63)
 font = pygame.font.Font("Font/monogram.ttf", 40)
 minecraft_font_play_again = pygame.font.Font("Font/Minecraft.ttf", 50)
 minecraft_font_thanks = pygame.font.Font("Font/Minecraft.ttf", 20)
-game_over_surface = font.render("GAME OVER", False, Yellow)
+# minecraft_font_press_space = pygame.font.Font("Font/monogram.ttf", 30)
+game_over_surface = font.render("GAME  OVER", False, Yellow)
+press_space_surface = font.render("Press  Space", False, Yellow)
 score_text_surface = font.render("SCORE", False, Yellow)
 highscore_text_surface = font.render("HIGH  SCORE", False, Yellow)
 
@@ -145,7 +147,7 @@ while True:
                         image = frame.to_ndarray(format="rgb24")
                         surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
                         surface = pygame.transform.scale(surface, (380, 380))
-                        screen.blit(surface, (video_location))
+                        screen.blit(surface, video_location)
                         pygame.display.flip()
                         clock.tick(80)
 
@@ -158,6 +160,7 @@ while True:
 
         else:
             screen.blit(game_over_surface, (570, 740, 50, 50))
+            screen.blit(press_space_surface, (50, 740, 50, 50))
 
         x = 50
         for life in range(game.lives):
@@ -183,7 +186,7 @@ while True:
 
 
         pygame.display.update()
-        clock.tick(200)
+        clock.tick(80)
 
     except KeyboardInterrupt:
         print("Stop Success")

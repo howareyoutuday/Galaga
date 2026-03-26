@@ -210,6 +210,7 @@ class Game:
         self.winning_sound.stop()
         self.play_bg_music()
         self.winning_music = False
+        self.play_winning_video = False
 
     def check_for_highscore(self):
         if self.score > self.highscore:

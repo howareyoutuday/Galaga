@@ -73,7 +73,7 @@ while True:
 
 
         #Updating
-        if game.run and not game.waiting_for_next_level:
+        if game.run and not game.waiting_for_next_level and not game.waiting_for_play_again:
             game.spaceship_group.update()
             game.move_aliens()
             game.alien_lasers_group.update()
@@ -105,7 +105,7 @@ while True:
             screen.blit(play_again_surface, play_again_surface.get_rect(center=play_again_rect.center))
             if game.play_winning_video:
                 video = av.open("Sounds/winning_video.mp4")
-                game.play_winning_video = True
+                game.play_winning_video = False
 
                 for frame in video.decode(video=0):
                     image = frame.to_ndarray(format="rgb24")

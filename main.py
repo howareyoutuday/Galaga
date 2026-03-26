@@ -12,7 +12,8 @@ Grey = (29, 29, 27)
 Yellow = (243, 216, 63)
 
 font = pygame.font.Font("Font/monogram.ttf", 40)
-minecraft_font = pygame.font.Font("Font/Minecraft.ttf", 30)
+minecraft_font_play_again = pygame.font.Font("Font/Minecraft.ttf", 50)
+minecraft_font_thanks = pygame.font.Font("Font/Minecraft.ttf", 20)
 game_over_surface = font.render("GAME OVER", False, Yellow)
 score_text_surface = font.render("SCORE", False, Yellow)
 highscore_text_surface = font.render("HIGH  SCORE", False, Yellow)
@@ -25,8 +26,8 @@ clock = pygame.time.Clock()
 game = Game(SCREEN_WIDTH, SCREEN_HEIGHT, OFFSET, screen)
 
 next_level_rect = pygame.Rect(290, 378, 220, 45)  # button for next level
-play_again_rect = pygame.Rect(290, 378, 220, 45)  # button for play again
-
+play_again_rect = pygame.Rect((SCREEN_WIDTH+OFFSET)/2-185, 528, 370, 95)  # button for play again
+thanks_rect = pygame.Rect((SCREEN_WIDTH+OFFSET)/2-85, 585, 180, 45)  # thank the player
 SHOOT_LASER = pygame.USEREVENT
 pygame.time.set_timer(SHOOT_LASER, 300)
 
@@ -100,9 +101,13 @@ while True:
 
 
         elif game.waiting_for_play_again:
-            play_again_surface = minecraft_font.render("PLAY AGAIN ?", False, Yellow)
+            play_again_surface = minecraft_font_play_again.render("PLAY AGAIN ?", False, Yellow)
+            thanks = minecraft_font_thanks.render("Thanks For Playing ;)", False, Yellow)
             pygame.draw.rect(screen, Yellow, play_again_rect, 2)
+
             screen.blit(play_again_surface, play_again_surface.get_rect(center=play_again_rect.center))
+            screen.blit(thanks, thanks.get_rect(center=thanks_rect.center))
+
             if game.play_winning_video:
                 video = av.open("Sounds/winning_video.mp4")
                 game.play_winning_video = False
@@ -110,27 +115,32 @@ while True:
 
                 print("video opened")
 
-                for frame in video.decode(video=0):
-                    for event in pygame.event.get():
-                        if event.type == pygame.QUIT:
-                            stop_video = True
-                            pygame.quit()
-                            sys.exit()
-
-                        if event.type == pygame.MOUSEBUTTONDOWN and game.waiting_for_play_again:
-                            if play_again_rect.collidepoint(event.pos):
-                                game.reset()
+                while not stop_video:
+                    video.seek(0)
+                    for frame in video.decode(video=0):
+                        for event in pygame.event.get():
+                            if event.type == pygame.QUIT:
                                 stop_video = True
+                                pygame.quit()
+                                sys.exit()
 
-                    if stop_video:
-                        break
+                            if event.type == pygame.MOUSEBUTTONDOWN and game.waiting_for_play_again:
+                                if play_again_rect.collidepoint(event.pos):
+                                    game.reset()
+                                    stop_video = True
 
-                    image = frame.to_ndarray(format="rgb24")
-                    surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
-                    screen.blit(surface, (0, 0))
-                    pygame.display.flip()
-                    clock.tick(60)
-                    print("video code")
+                        if stop_video:
+                            break
+
+                        video_location = ((SCREEN_WIDTH+OFFSET)/2 - 190 , 75)
+                        print(video_location)
+
+                        image = frame.to_ndarray(format="rgb24")
+                        surface = pygame.image.frombuffer(image.tobytes(), (240, 240), "RGB")
+                        surface = pygame.transform.scale(surface, (380, 380))
+                        screen.blit(surface, (video_location))
+                        pygame.display.flip()
+                        clock.tick(60)
 
 
 
@@ -166,7 +176,7 @@ while True:
 
 
         pygame.display.update()
-        clock.tick(200)
+        clock.tick(80)
 
     except KeyboardInterrupt:
         print("Stop Success")

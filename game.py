@@ -47,25 +47,25 @@ class Game:
         return obstacles
 
     def create_aliens(self):
-        # if self.level == 1:
-        #     rows = [3, 4]
-        #     alien_type = 1
-        # elif self.level == 2:
-        #     rows = [1, 2, 3, 4]
-        #     alien_type = 2
-        # else:
-        #     rows = [0, 1, 2, 3, 4]
-        #     alien_type = 3
-
         if self.level == 1:
-            rows = [1]
+            rows = [3, 4]
             alien_type = 1
         elif self.level == 2:
-            rows = [1]
+            rows = [1, 2, 3, 4]
             alien_type = 2
         else:
-            rows = [1]
+            rows = [0, 1, 2, 3, 4]
             alien_type = 3
+
+        # if self.level == 1:
+        #     rows = [1]
+        #     alien_type = 1
+        # elif self.level == 2:
+        #     rows = [1]
+        #     alien_type = 2
+        # else:
+        #     rows = [1]
+        #     alien_type = 3
 
 
         for row in rows:

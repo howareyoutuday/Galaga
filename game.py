@@ -24,7 +24,7 @@ class Game:
         self.aliens_direction = 1
         self.alien_lasers_group = pygame.sprite.Group()
         self.mystery_ship_group = pygame.sprite.GroupSingle()
-        self.lives = 3
+        self.lives = 4
         self.run = True
         self.score = 0
         self.highscore = 0
@@ -46,25 +46,25 @@ class Game:
         return obstacles
 
     def create_aliens(self):
-        if self.level == 1:
-            rows = [3, 4]
-            alien_type = 1
-        elif self.level == 2:
-            rows = [1, 2, 3, 4]
-            alien_type = 2
-        else:
-            rows = [0, 1, 2, 3, 4]
-            alien_type = 3
-
         # if self.level == 1:
-        #     rows = [1]
+        #     rows = [3, 4]
         #     alien_type = 1
         # elif self.level == 2:
-        #     rows = [1]
+        #     rows = [1, 2, 3, 4]
         #     alien_type = 2
         # else:
-        #     rows = [1]
+        #     rows = [0, 1, 2, 3, 4]
         #     alien_type = 3
+
+        if self.level == 1:
+            rows = [1]
+            alien_type = 1
+        elif self.level == 2:
+            rows = [1]
+            alien_type = 2
+        else:
+            rows = [1]
+            alien_type = 3
 
 
         for row in rows:
@@ -196,7 +196,7 @@ class Game:
 
     def reset(self):
         self.run = True
-        self.lives = 3
+        self.lives = 4
         self.level = 1
         self.waiting_for_next_level = False
         self.spaceship_group.sprite.reset()

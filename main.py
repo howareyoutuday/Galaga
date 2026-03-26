@@ -106,6 +106,7 @@ while True:
             if game.play_winning_video:
                 video = av.open("Sounds/winning_video.mp4")
                 game.play_winning_video = False
+                print("video opened")
 
                 for frame in video.decode(video=0):
                     image = frame.to_ndarray(format="rgb24")
@@ -113,6 +114,7 @@ while True:
                     screen.blit(surface, (0, 0))
                     pygame.display.flip()
                     clock.tick(60)
+                    print("video code")
 
 
         elif game.run:
@@ -146,7 +148,7 @@ while True:
 
 
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(200)
 
     except KeyboardInterrupt:
         print("Stop Success")
